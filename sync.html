@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style=" overflow:auto; overflow: hidden\9;" class="xIndex" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MediaShair sync</title>
+<style>.NOpt{maring-top:-165px;}</style>
+<script src="jquery.min.js" type="text/javascript" jss="html/index"></script>
+<script src="react.js" type="text/javascript" jss="html/index"></script>
+<script src="JSXTransformer.js" type="text/javascript" jss="html/index"></script>
+<script type="text/jsx">
+ /** @jsx React.DOM */
+ var datas = {'Foo': [],
+              'Foo/Bar': [{'name':'zip'}, {'name':'zop'}],
+              'Foo/Baz': [{'name':'zip'}, {'name':'zap'}]};
+
+ var SyncUI = React.createClass({
+   getInitialState: function() {
+     return {pathinfo: {}, from:'', to:''};
+   },
+   myRefresh: function(pathinfo) {
+     this.setState({pathinfo: datas});
+   },
+   render: function() {
+     return (<div>
+             <button type='button' onClick={this.myRefresh}>Refresh</button>
+             <br/><br/>
+             <PathDropdown dir='From' data={this.state.pathinfo}/>
+             <br/>
+             <PathDropdown dir='To' data={this.state.pathinfo}/>
+             </div>);
+   }
+ });
+
+ var PathDropdown = React.createClass({
+   handleChange: function(){
+     this.props.onUserInput(
+       this.refs.selectedInput.getDOMNode().value
+     );
+   },
+   render: function(){
+     var paths = [<option value='' disabled='disabled' key={this.props.dir}>
+                  Select path...</option>];
+     Object.keys(this.props.data).forEach(function(path){
+       paths.push(<option value={path} key={path}>{path}</option>);
+       console.log("path", path);
+     });
+     return (<span>{this.props.dir}:
+             <br/>
+             <select id='react-component'
+                     defaultValue=''
+                     value={this.props.selected}
+                     onChange={this.handleChange}
+                     ref='selectedInput'>
+             {paths}
+             </select>
+             </span>);
+   }
+ })
+</script>
+
+</head>
+<body>
+  <script type="text/jsx">
+   /** @jsx React.DOM */
+   React.renderComponent(
+     <div>
+     <SyncUI/>
+     </div>,
+     document.body
+   );
+  </script>
+</body>
