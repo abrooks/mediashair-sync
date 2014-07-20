@@ -24,20 +24,29 @@
    myRefresh: function(pathinfo) {
      this.setState({pathinfo: datas});
    },
+   onSelectionChange: function(id, val) {
+     var update = {}
+     update[id.toLowerCase()] = val
+     this.setState(update);
+   },
    render: function() {
+     // compute diff
+     var new_diff = [];
+     var del_diff = [];
      return (<div>
              <button type='button' onClick={this.myRefresh}>Refresh</button>
              <br/><br/>
-             <PathDropdown dir='From' data={this.state.pathinfo}/>
+             <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
              <br/>
-             <PathDropdown dir='To' data={this.state.pathinfo}/>
+             <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
              </div>);
    }
  });
 
  var PathDropdown = React.createClass({
    handleChange: function(){
-     this.props.onUserInput(
+     this.props.onSelectionChange(
+       this.refs.selectedInput.getDOMNode().id,
        this.refs.selectedInput.getDOMNode().value
      );
    },
@@ -46,12 +55,11 @@
                   Select path...</option>];
      Object.keys(this.props.data).forEach(function(path){
        paths.push(<option value={path} key={path}>{path}</option>);
-       console.log("path", path);
      });
      return (<span>{this.props.dir}:
              <br/>
-             <select id='react-component'
-                     defaultValue=''
+             <select id={this.props.dir}
+                     defaultValue={this.props.selected}
                      value={this.props.selected}
                      onChange={this.handleChange}
                      ref='selectedInput'>
