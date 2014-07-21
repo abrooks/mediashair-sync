@@ -1,120 +1,120 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" style=" overflow:auto; overflow: hidden\9;" class="xIndex" >
-<head>
-<!-- Color scheme
+  <head>
+    <!-- Color scheme
     http://www.paletton.com/#uid=2000u0kllllaFw0g0qFqFg0w0aF
     http://www.paletton.com/#uid=5000u0kllllaFw0g0qFqFg0w0aF
     http://www.paletton.com/#uid=3000u0kllllaFw0g0qFqFg0w0aF
--->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>MediaShair sync</title>
-<style>.NOpt{maring-top:-165px;}</style>
-<script src="jquery.min.js" type="text/javascript" jss="html/index"></script>
-<script src="react.js" type="text/javascript" jss="html/index"></script>
-<script src="JSXTransformer.js" type="text/javascript" jss="html/index"></script>
-<script type="text/jsx">
- /** @jsx React.DOM */
- var BASE_URL = 'http://10.10.10.254/data/';
- var datas = {'Foo': [],
-              'UsbDisk2/Volume1/images/': [],
-              'Long/path/name/for/testing/purposes/here': [],
-              'Foo/Bar': [{'name':'zip'}, {'name':'zop'}],
-              'Foo/Baz': [{'name':'zip'}, {'name':'zap'}]};
+    -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MediaShair sync</title>
+    <style>.NOpt{maring-top:-165px;}</style>
+    <script src="jquery.min.js" type="text/javascript" jss="html/index"></script>
+    <script src="react.js" type="text/javascript" jss="html/index"></script>
+    <script src="JSXTransformer.js" type="text/javascript" jss="html/index"></script>
+    <script type="text/jsx">
+     /** @jsx React.DOM */
+     var BASE_URL = 'http://10.10.10.254/data/';
+     var datas = {'Foo': [],
+                  'UsbDisk2/Volume1/images/': [],
+                  'Long/path/name/for/testing/purposes/here': [],
+                  'Foo/Bar': [{'name':'zip'}, {'name':'zop'}],
+                  'Foo/Baz': [{'name':'zip'}, {'name':'zap'}]};
 
- var SyncButtons = React.createClass({
-   render: function(){
-     return(<div>
-            <button type='button'>New</button>
-            <button type='button'>Full</button>
-            <button type='button'>Del</button>
-            </div>);
-   }
- });
-
- var SyncFiles = React.createClass({
-   render: function(){
-     return(<span><h1>{this.props.fmode}</h1></span>);
-   }
- });
-
- var SyncUI = React.createClass({
-   render: function(){
-     return(<div>
-            <SyncButtons/>
-            <br/>
-            <span>
-            <SyncFiles fmode='new'/>
-            <SyncFiles fmode='del'/>
-            </span>
-            </div>);
-   }
- });
-
- var PathDropdown = React.createClass({
-   handleChange: function(){
-     this.props.onSelectionChange(
-       this.refs.selectedInput.getDOMNode().id,
-       this.refs.selectedInput.getDOMNode().value
-     );
-   },
-   render: function(){
-     var paths = [<option value='' disabled='disabled' key={this.props.dir}>
-                  Select path...</option>];
-     Object.keys(this.props.data).forEach(function(path){
-       paths.push(<option value={path} key={path}>{path}</option>);
+     var SyncButtons = React.createClass({
+       render: function(){
+         return(<div>
+                <button type='button'>New</button>
+                <button type='button'>Full</button>
+                <button type='button'>Del</button>
+                </div>);
+       }
      });
-     return (<span><div>{this.props.dir}:</div>
-             <div>
-             <select id={this.props.dir}
-                     defaultValue={this.props.selected}
-                     value={this.props.selected}
-                     onChange={this.handleChange}
-                     ref='selectedInput'>
-             {paths}
-             </select>
-             </div>
-             </span>);
-   }
- });
 
- var FullUI = React.createClass({
-   getInitialState: function() {
-     return {pathinfo: {}, from:'', to:''};
-   },
-   myRefresh: function(pathinfo) {
-     this.setState({pathinfo: datas});
-   },
-   onSelectionChange: function(id, val) {
-     var update = {}
-     update[id.toLowerCase()] = val
-     this.setState(update);
-   },
-   render: function() {
-     // compute diff
-     var new_diff = [];
-     var del_diff = [];
-     return (<div>
-             <button type='button' onClick={this.myRefresh}>Refresh</button>
-             <hr/>
-             <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
-             <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
-             <hr/>
-             <SyncUI/>
-             </div>);
-   }
- });
-</script>
+     var SyncFiles = React.createClass({
+       render: function(){
+         return(<span><h1>{this.props.fmode}</h1></span>);
+       }
+     });
 
-</head>
-<body>
-  <script type="text/jsx">
-   /** @jsx React.DOM */
-   React.renderComponent(
-     <div>
-     <FullUI/>
-     </div>,
-     document.body
-   );
-  </script>
-</body>
+     var SyncUI = React.createClass({
+       render: function(){
+         return(<div>
+                <SyncButtons/>
+                <br/>
+                <span>
+                <SyncFiles fmode='new'/>
+                <SyncFiles fmode='del'/>
+                </span>
+                </div>);
+       }
+     });
+
+     var PathDropdown = React.createClass({
+       handleChange: function(){
+         this.props.onSelectionChange(
+           this.refs.selectedInput.getDOMNode().id,
+           this.refs.selectedInput.getDOMNode().value
+         );
+       },
+       render: function(){
+         var paths = [<option value='' disabled='disabled' key={this.props.dir}>
+                      Select path...</option>];
+         Object.keys(this.props.data).forEach(function(path){
+           paths.push(<option value={path} key={path}>{path}</option>);
+         });
+         return (<span><div>{this.props.dir}:</div>
+                 <div>
+                 <select id={this.props.dir}
+                 defaultValue={this.props.selected}
+                 value={this.props.selected}
+                 onChange={this.handleChange}
+                 ref='selectedInput'>
+                 {paths}
+                 </select>
+                 </div>
+                 </span>);
+       }
+     });
+
+     var FullUI = React.createClass({
+       getInitialState: function() {
+         return {pathinfo: {}, from:'', to:''};
+       },
+       myRefresh: function(pathinfo) {
+         this.setState({pathinfo: datas});
+       },
+       onSelectionChange: function(id, val) {
+         var update = {}
+         update[id.toLowerCase()] = val
+         this.setState(update);
+       },
+       render: function() {
+         // compute diff
+         var new_diff = [];
+         var del_diff = [];
+         return (<div>
+                 <button type='button' onClick={this.myRefresh}>Refresh</button>
+                 <hr/>
+                 <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
+                 <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
+                 <hr/>
+                 <SyncUI/>
+                 </div>);
+       }
+     });
+    </script>
+
+  </head>
+  <body>
+    <script type="text/jsx">
+      /** @jsx React.DOM */
+      React.renderComponent(
+      <div>
+        <FullUI/>
+      </div>,
+      document.body
+      );
+    </script>
+  </body>
