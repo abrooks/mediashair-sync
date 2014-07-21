@@ -17,7 +17,63 @@
               'Foo/Bar': [{'name':'zip'}, {'name':'zop'}],
               'Foo/Baz': [{'name':'zip'}, {'name':'zap'}]};
 
+ var SyncButtons = React.createClass({
+   render: function(){
+     return(<div>
+            <button type='button'>New</button>
+            <button type='button'>Full</button>
+            <button type='button'>Del</button>
+            </div>);
+   }
+ });
+
+ var SyncFiles = React.createClass({
+   render: function(){
+     return(<span><h1>{this.props.fmode}</h1></span>);
+   }
+ });
+
  var SyncUI = React.createClass({
+   render: function(){
+     return(<div>
+            <SyncButtons/>
+            <br/>
+            <span>
+            <SyncFiles fmode='new'/>
+            <SyncFiles fmode='del'/>
+            </span>
+            </div>);
+   }
+ });
+
+ var PathDropdown = React.createClass({
+   handleChange: function(){
+     this.props.onSelectionChange(
+       this.refs.selectedInput.getDOMNode().id,
+       this.refs.selectedInput.getDOMNode().value
+     );
+   },
+   render: function(){
+     var paths = [<option value='' disabled='disabled' key={this.props.dir}>
+                  Select path...</option>];
+     Object.keys(this.props.data).forEach(function(path){
+       paths.push(<option value={path} key={path}>{path}</option>);
+     });
+     return (<span><div>{this.props.dir}:</div>
+             <div>
+             <select id={this.props.dir}
+                     defaultValue={this.props.selected}
+                     value={this.props.selected}
+                     onChange={this.handleChange}
+                     ref='selectedInput'>
+             {paths}
+             </select>
+             </div>
+             </span>);
+   }
+ });
+
+ var FullUI = React.createClass({
    getInitialState: function() {
      return {pathinfo: {}, from:'', to:''};
    },
@@ -35,39 +91,14 @@
      var del_diff = [];
      return (<div>
              <button type='button' onClick={this.myRefresh}>Refresh</button>
-             <br/><br/>
+             <hr/>
              <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
-             <br/>
              <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
+             <hr/>
+             <SyncUI/>
              </div>);
    }
  });
-
- var PathDropdown = React.createClass({
-   handleChange: function(){
-     this.props.onSelectionChange(
-       this.refs.selectedInput.getDOMNode().id,
-       this.refs.selectedInput.getDOMNode().value
-     );
-   },
-   render: function(){
-     var paths = [<option value='' disabled='disabled' key={this.props.dir}>
-                  Select path...</option>];
-     Object.keys(this.props.data).forEach(function(path){
-       paths.push(<option value={path} key={path}>{path}</option>);
-     });
-     return (<span>{this.props.dir}:
-             <br/>
-             <select id={this.props.dir}
-                     defaultValue={this.props.selected}
-                     value={this.props.selected}
-                     onChange={this.handleChange}
-                     ref='selectedInput'>
-             {paths}
-             </select>
-             </span>);
-   }
- })
 </script>
 
 </head>
@@ -76,7 +107,7 @@
    /** @jsx React.DOM */
    React.renderComponent(
      <div>
-     <SyncUI/>
+     <FullUI/>
      </div>,
      document.body
    );
