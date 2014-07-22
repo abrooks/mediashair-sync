@@ -19,8 +19,16 @@
      var datas = {'Foo': [],
                   'UsbDisk2/Volume1/images/': [],
                   'Long/path/name/for/testing/purposes/here': [],
-                  'Foo/Bar': [{'name':'zip'}, {'name':'zop'}],
-                  'Foo/Baz': [{'name':'zip'}, {'name':'zap'}]};
+                  'Foo/Bar': {'zerp': {size: 1, time: 1},
+                              'zoop': {size: 11, time: 3},
+                              'zip': {size: 2, time: 2},
+                              'zep': {size: 2, time: 2},
+                              'zop': {size: 100, time: 9}},
+                  'Foo/Baz': {'zerp': {size: 2, time: 1},
+                              'zoip': {size: 11, time: 3},
+                              'zip': {size: 2, time: 2},
+                              'zep': {size: 3, time: 2},
+                              'zap': {size: 100, time: 9}}};
 
      var SyncButtons = React.createClass({
        render: function(){
@@ -34,7 +42,15 @@
 
      var SyncFiles = React.createClass({
        render: function(){
-         return(<span><h1>{this.props.fmode}</h1></span>);
+         var items = [];
+         var content = <div/>;
+         if( this.props.files && this.props.files.length != 0 ) {
+           this.props.files.forEach(function(f) {
+             items.push(<div>{f}</div>);
+           });
+           content = <span><h1>{this.props.fmode}</h1>{items}</span>;
+         }
+         return(content);
        }
      });
 
@@ -44,8 +60,9 @@
                 <SyncButtons/>
                 <br/>
                 <span>
-                <SyncFiles fmode='new'/>
-                <SyncFiles fmode='del'/>
+                <SyncFiles fmode='del' files={this.props.fdel}/>
+                <SyncFiles fmode='changed' files={this.props.fchanged}/>
+                <SyncFiles fmode='new' files={this.props.fnew}/>
                 </span>
                 </div>);
        }
@@ -78,12 +95,33 @@
        }
      });
 
+     var dirdiff =  function(from, to) {
+       var diff = [];
+       Object.keys(from).forEach(function(k) {
+         if(! to[k]) {
+             diff.push(k);
+         }
+       });
+       return diff;
+     };
+
+     var dirchanged =  function(from, to, same_size, same_time) {
+       var diff = [];
+       Object.keys(from).forEach(function(k) {
+         if (to[k] && ((same_size && (to[k].size != from[k].size))
+                       || (same_time && (to[k].time != from[k].time)))) {
+           diff.push(k);
+         }
+       });
+       return diff;
+     };
+
      var FullUI = React.createClass({
        getInitialState: function() {
          return {pathinfo: {}, from:'', to:''};
        },
        myRefresh: function(pathinfo) {
-         this.setState({pathinfo: datas});
+         this.setState({pathinfo: datas, to: '', from: ''});
        },
        onSelectionChange: function(id, val) {
          var update = {}
@@ -92,15 +130,23 @@
        },
        render: function() {
          // compute diff
-         var new_diff = [];
-         var del_diff = [];
+         var from = this.state.from ? this.state.pathinfo[this.state.from] : {};
+         var to = this.state.to ? this.state.pathinfo[this.state.to] : {};
+         var fnew = [];
+         var fchanged = [];
+         var fdel = [];
+         if ( this.state.from && this.state.to ) {
+           fnew = dirdiff(from, to);
+           fdel = dirdiff(to, from);
+           fchanged = dirchanged(from,to,true,true);
+         }
          return (<div>
                  <button type='button' onClick={this.myRefresh}>Refresh</button>
                  <hr/>
                  <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
                  <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
                  <hr/>
-                 <SyncUI/>
+                 <SyncUI fnew={fnew} fdel={fdel} fchanged={fchanged}/>
                  </div>);
        }
      });
