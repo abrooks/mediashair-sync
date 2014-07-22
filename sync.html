@@ -33,9 +33,9 @@
      var SyncButtons = React.createClass({
        render: function(){
          return(<div>
-                <button type='button'>New</button>
-                <button type='button'>Full</button>
-                <button type='button'>Del</button>
+                <button id='new' type='button'>New</button>
+                <button id='full' type='button'>Full</button>
+                <button id='del' type='button'>Del</button>
                 </div>);
        }
      });
@@ -129,7 +129,6 @@
          this.setState(update);
        },
        render: function() {
-         // compute diff
          var from = this.state.from ? this.state.pathinfo[this.state.from] : {};
          var to = this.state.to ? this.state.pathinfo[this.state.to] : {};
          var fnew = [];
@@ -141,7 +140,8 @@
            fchanged = dirchanged(from,to,true,true);
          }
          return (<div>
-                 <button type='button' onClick={this.myRefresh}>Refresh</button>
+                 <button id='myRefresh' type='button' onClick={this.myRefresh}>Refresh</button>
+                 <button id='fakeRefresh' type='button' onClick={this.fakeRefresh}>FakeRefresh</button>
                  <hr/>
                  <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
                  <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
