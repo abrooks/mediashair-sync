@@ -116,11 +116,46 @@
        return diff;
      };
 
+    var getPROPFIND = function(path, cb) {
+       $.ajax(path,
+              {type:"PROPFIND",
+               dataType:"xml",
+               headers:{"Content-Type": "text/xml; charset=\"utf-8\"",
+                         Depth: 1}}).done(cb).fail(function(x){console.log('fail', x, path);}).always(function(){console.log("always", path);});
+                    //callBack: function (flg,v){zippy=v; console.log(flg,v);}})
+     };
+
+     var XX = 'nope';
      var FullUI = React.createClass({
        getInitialState: function() {
-         return {pathinfo: {}, from:'', to:''};
+         return {pathinfo: {}, from:'', to:'', todo: [], inprogress: []};
        },
-       myRefresh: function(pathinfo) {
+       refreshCB: function(data, val) {
+         XX = data;
+         console.log('CB', this.state.pathinfo, data, val);
+         var $xml = $( data ), resps = $xml.find('response');
+         console.log('resps', resps);
+         resps.toArray().slice(1).forEach(function (r) {
+           var $r = $( r );
+           var h = $r.find('href').text();
+           var s = $r.find('getcontentlength').text();
+           var ts = $r.find('getlastmodified').text();
+           var c = $r.find('collection').toArray()[0];
+           if( c ) {
+             console.log("RECURSE:", h, s, ts, c);
+             getPROPFIND(h, this.refreshCB);
+           } else {
+             console.log("FOUND:", h, s, ts, c);
+           }
+         });
+       },
+       myRefresh: function(event, val) {
+         console.log("event", val, event.target.id);
+         this.setState({pathinfo: datas, to: '', from: ''});
+         getPROPFIND(BASE_URL, this.refreshCB);
+       },
+       fakeRefresh: function(event, val) {
+         console.log("fevent", val, event.target.id);
          this.setState({pathinfo: datas, to: '', from: ''});
        },
        onSelectionChange: function(id, val) {
