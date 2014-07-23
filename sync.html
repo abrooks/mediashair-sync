@@ -55,14 +55,27 @@
      });
 
      var SyncUI = React.createClass({
+       syncCopies: function(items, from, to) {
+         var item = items[0];
+         var root_this = this;
+         if( item ) {
+           var rest = items.slice(1);
+           console.log("copying", item.name, rest, from, to);
+           doCOPY(from + '/' + item.name,
+                  to + '/' + item.name,
+                  function() {
+               console.log("copy done", item.name, arguments);
+               root_this.syncCopies(rest, from, to);
+             });
+         }
+       },
        syncDel: function(id){
          console.log("mydel", id);
        },
        syncNew: function(id){
-         console.log("mynew", this.props.fnew, this.props.from, this.props.to);
-         doCOPY(BASE_URL + this.props.from + '/' + this.props.fnew[0].name,
-                BASE_URL + this.props.to + '/' + this.props.fnew[0].name,
-                function(){console.log("copy done", arguments);});
+         this.syncCopies(this.props.fnew,
+                         BASE_URL + this.props.from,
+                         BASE_URL + this.props.to);
        },
        syncFull: function(id){
          console.log("myfull", id);
@@ -146,7 +159,7 @@
                //ovTime: 0,
                //onCensor: "xx",
                headers: {Destination: dst, Depth:1}})
-            .done(function(){console.log('COPY done', arguments);})
+            .done(cb)
             .fail(function (){console.log('COPY fail', arguments);});
      }
 
