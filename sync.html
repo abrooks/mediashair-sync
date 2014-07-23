@@ -126,9 +126,7 @@
                          Depth:
               1}})
                .done(cb)
-               .fail(function(x){console.log('fail', x, path);})
-               .always(function(a,b,c){console.log("always", path,a,b,c);});
-                    //callBack: function (flg,v){zippy=v; console.log(flg,v);}})
+               .fail(function(x){console.log('fail', x, path);});
      };
 
      var XX = 'nope';
