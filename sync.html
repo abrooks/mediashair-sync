@@ -129,13 +129,11 @@
                .fail(function(x){console.log('fail', x, path);});
      };
 
-     var XX = 'nope';
      var FullUI = React.createClass({
        getInitialState: function() {
          return {pathinfo: {}, from:'', to:'', todo: [], inprogress: []};
        },
        refreshCB: function(data, val) {
-         XX = data;
          var root_this = this;
          var pathinfo = this.state.pathinfo;
          var $xml = $( data ), resps = $xml.find('response');
