@@ -59,7 +59,10 @@
          console.log("mydel", id);
        },
        syncNew: function(id){
-         console.log("mynew", id);
+         console.log("mynew", this.props.fnew, this.props.from, this.props.to);
+         doCOPY(BASE_URL + this.props.from + '/' + this.props.fnew[0].name,
+                BASE_URL + this.props.to + '/' + this.props.fnew[0].name,
+                function(){console.log("copy done", arguments);});
        },
        syncFull: function(id){
          console.log("myfull", id);
@@ -129,14 +132,23 @@
 
     var getPROPFIND = function(path, cb) {
        $.ajax(path,
-              {type:"PROPFIND",
-               dataType:"xml",
-               headers:{"Content-Type": "text/xml; charset=\"utf-8\"",
-                         Depth:
-              1}})
+              {type: "PROPFIND",
+               dataType: "xml",
+               headers: {"Content-Type": "text/xml; charset=\"utf-8\"", Depth: 1}})
                .done(cb)
-               .fail(function(x){console.log('fail', x, path);});
+               .fail(function(x){console.log('PROPFIND fail', x, path);});
      };
+
+     var doCOPY = function(src, dst, cb) {
+       $.ajax(src,
+              {type: "COPY",
+               dataType: "text",
+               //ovTime: 0,
+               //onCensor: "xx",
+               headers: {Destination: dst, Depth:1}})
+            .done(function(){console.log('COPY done', arguments);})
+            .fail(function (){console.log('COPY fail', arguments);});
+     }
 
      var FullUI = React.createClass({
        getInitialState: function() {
@@ -177,6 +189,7 @@
        onSelectionChange: function(id, val) {
          var update = {}
          update[id.toLowerCase()] = val
+         console.log("onSelectionChange", update);
          this.setState(update);
        },
        render: function() {
@@ -197,7 +210,7 @@
                  <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
                  <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
                  <hr/>
-                 <SyncUI fnew={fnew} fdel={fdel} fchanged={fchanged}/>
+                 <SyncUI from={this.state.from} to={this.state.to} fnew={fnew} fdel={fdel} fchanged={fchanged}/>
                  </div>);
        }
      });
