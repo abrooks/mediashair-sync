@@ -78,8 +78,10 @@
        render: function(){
          var paths = [<option value='' disabled='disabled' key={this.props.dir}>
                       Select path...</option>];
+         var root_this = this;
          Object.keys(this.props.data).forEach(function(path){
-           paths.push(<option value={path} key={path}>{path}</option>);
+           var count = Object.keys(root_this.props.data[path]).length;
+           paths.push(<option value={path} key={path}>{path} ({count})</option>);
          });
          return (<span><div>{this.props.dir}:</div>
                  <div>
