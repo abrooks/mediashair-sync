@@ -133,6 +133,7 @@
        refreshCB: function(data, val) {
          XX = data;
          console.log('CB', this.state.pathinfo, data, val);
+         var root_this = this;
          var $xml = $( data ), resps = $xml.find('response');
          console.log('resps', resps);
          resps.toArray().slice(1).forEach(function (r) {
@@ -143,7 +144,7 @@
            var c = $r.find('collection').toArray()[0];
            if( c ) {
              console.log("RECURSE:", h, s, ts, c);
-             getPROPFIND(h, this.refreshCB);
+             getPROPFIND(h, root_this.refreshCB);
            } else {
              console.log("FOUND:", h, s, ts, c);
            }
