@@ -33,9 +33,9 @@
      var SyncButtons = React.createClass({
        render: function(){
          return(<div>
-                <button id='new' type='button'>New</button>
-                <button id='full' type='button'>Full</button>
-                <button id='del' type='button'>Del</button>
+                <button id='new' type='button' onClick={this.props.syncNew}>New</button>
+                <button id='full' type='button' onClick={this.props.syncFull}>Full</button>
+                <button id='del' type='button' onClick={this.props.syncDel}>Del</button>
                 </div>);
        }
      });
@@ -55,9 +55,18 @@
      });
 
      var SyncUI = React.createClass({
+       syncDel: function(id){
+         console.log("mydel", id);
+       },
+       syncNew: function(id){
+         console.log("mynew", id);
+       },
+       syncFull: function(id){
+         console.log("myfull", id);
+       },
        render: function(){
          return(<div>
-                <SyncButtons/>
+                <SyncButtons syncNew={this.syncNew} syncFull={this.syncFull} syncDel={this.syncDel}/>
                 <br/>
                 <span>
                 <SyncFiles fmode='del' files={this.props.fdel}/>
