@@ -144,10 +144,12 @@
            var ts = $r.find('getlastmodified').text();
            var c = $r.find('collection').toArray()[0];
            if( c ) {
-             var p = h.replace(BASE_URL, '');
-             pathinfo[p] = {}
-             root_this.setState({pathinfo: pathinfo});
-             getPROPFIND(h, root_this.refreshCB);
+             if( h.indexOf('/.') == -1 ) {
+               var p = h.replace(BASE_URL, '');
+               pathinfo[p] = {}
+               root_this.setState({pathinfo: pathinfo});
+               getPROPFIND(h, root_this.refreshCB);
+             }
            } else {
              var p = h.replace(BASE_URL, '').replace(/\/[^/]*$/,'');
              var f = h.replace(BASE_URL, '').replace(/.*\//,'');
