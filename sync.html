@@ -46,7 +46,7 @@
          var content = <div/>;
          if( this.props.files && this.props.files.length != 0 ) {
            this.props.files.forEach(function(f) {
-             items.push(<div>{f}</div>);
+             items.push(<div key={f.name}>{f.name}, {f.size} bytes, {f.time}</div>);
            });
            content = <span><h1>{this.props.fmode}</h1>{items}</span>;
          }
@@ -101,7 +101,7 @@
        var diff = [];
        Object.keys(from).forEach(function(k) {
          if(! to[k]) {
-             diff.push(k);
+             diff.push({name: k, size: from[k].size, time: from[k].time});
          }
        });
        return diff;
