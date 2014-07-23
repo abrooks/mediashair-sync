@@ -69,8 +69,21 @@
              });
          }
        },
+       syncDeletes: function(targets, path) {
+         var item = targets[0];
+         var root_this = this;
+         if( item ) {
+           var rest = targets.slice(1);
+           console.log("deleting", item.name, rest, path);
+           doDELETE(path + '/' + item.name,
+                  function() {
+               console.log("delete done", item.name, arguments);
+               root_this.syncDeletes(rest, path);
+             });
+         }
+       },
        syncDel: function(id){
-         console.log("mydel", id);
+         this.syncDeletes(this.props.fdel, BASE_URL + this.props.to);
        },
        syncNew: function(id){
          this.syncCopies(this.props.fnew,
@@ -78,7 +91,10 @@
                          BASE_URL + this.props.to);
        },
        syncFull: function(id){
-         console.log("myfull", id);
+         this.syncDeletes(this.props.fdel, BASE_URL + this.props.to);
+         this.syncCopies(this.props.fnew,
+                         BASE_URL + this.props.from,
+                         BASE_URL + this.props.to);
        },
        render: function(){
          return(<div>
@@ -161,6 +177,15 @@
                headers: {Destination: dst, Depth:1}})
             .done(cb)
             .fail(function (){console.log('COPY fail', arguments);});
+     }
+
+     var doDELETE = function(target, cb) {
+       $.ajax(target,
+              {type: "DELETE",
+               dataType: "text",
+               headers: {}})
+            .done(cb)
+            .fail(function (){console.log('DELETE fail', arguments);});
      }
 
      var FullUI = React.createClass({
