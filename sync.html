@@ -112,7 +112,7 @@
        Object.keys(from).forEach(function(k) {
          if (to[k] && ((same_size && (to[k].size != from[k].size))
                        || (same_time && (to[k].time != from[k].time)))) {
-           diff.push(k);
+           diff.push({name: k, size: from[k].size, time: from[k].time});
          }
        });
        return diff;
