@@ -147,24 +147,20 @@
              var p = h.replace(BASE_URL, '');
              pathinfo[p] = {}
              root_this.setState({pathinfo: pathinfo});
-             console.log("RECURSE:", h, s, ts, c);
              getPROPFIND(h, root_this.refreshCB);
            } else {
              var p = h.replace(BASE_URL, '').replace(/\/[^/]*$/,'');
              var f = h.replace(BASE_URL, '').replace(/.*\//,'');
              pathinfo[p][f] = {size: s, time: ts};
              root_this.setState({pathinfo: pathinfo});
-             console.log("FOUND:", h, s, ts, c);
            }
          });
        },
        myRefresh: function(event, val) {
-         console.log("event", val, event.target.id);
          this.setState({pathinfo: {}, to: '', from: ''});
          getPROPFIND(BASE_URL, this.refreshCB);
        },
        fakeRefresh: function(event, val) {
-         console.log("fevent", val, event.target.id);
          this.setState({pathinfo: datas, to: '', from: ''});
        },
        onSelectionChange: function(id, val) {
