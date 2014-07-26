@@ -13,7 +13,11 @@
      /* .NOpt{maring-top:-165px;} */
      /* http://hellohappy.org/css3-buttons/ */
      body {
+       font: bold 16px/1 "helvetica neue", helvetica, arial, sans-serif;
        font-size: 150%;
+     }
+     td.tdsize {
+       text-align: right;
      }
      button.mybutton {
        background-color: #8c9cbf;
@@ -94,9 +98,13 @@
          if( this.props.files && this.props.files.length != 0 ) {
            this.props.files.forEach(function(f) {
              var mbsize = (f.size/(1024*1024)).toFixed(2);
-             items.push(<div key={f.name}>{f.name}, {mbsize}MB, {f.time}</div>);
+             items.push(<tr key={f.name}>
+                        <td>{f.name}&nbsp;</td>
+                        <td className='tdsize'>{mbsize}MB&nbsp;</td>
+                        <td>{f.time}</td>
+                        </tr>);
            });
-           content = <span><h1>{this.props.fmode}</h1>{items}</span>;
+           content = <span><h1>{this.props.fmode}</h1><table>{items}</table></span>;
          }
          return(content);
        }
