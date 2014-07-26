@@ -9,7 +9,67 @@
     -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>MediaShair sync</title>
-    <style>.NOpt{maring-top:-165px;}</style>
+    <style>
+     /* .NOpt{maring-top:-165px;} */
+     /* http://hellohappy.org/css3-buttons/ */
+     body {
+       font-size: 150%;
+     }
+     button.mybutton {
+       background-color: #8c9cbf;
+       background-image: -webkit-gradient(linear, left top, left bottom,
+                                          color-stop(0%, #8c9cbf),
+                                          color-stop(50%, #546a9e),
+                                          color-stop(50%, #36518f),
+                                          color-stop(100%, #3d5691));
+       background-image: -webkit-linear-gradient(top, #8c9cbf 0%, #546a9e
+                                                 50%, #36518f 50%, #3d5691
+                                                 100%);
+       background-image: -moz-linear-gradient(top, #8c9cbf 0%, #546a9e 50%,
+                                              #36518f 50%, #3d5691 100%);
+       background-image: -ms-linear-gradient(top, #8c9cbf 0%, #546a9e 50%,
+                                             #36518f 50%, #3d5691 100%);
+       background-image: -o-linear-gradient(top, #8c9cbf 0%, #546a9e 50%,
+                                            #36518f 50%, #3d5691 100%);
+       background-image: linear-gradient(top, #8c9cbf 0%, #546a9e 50%,
+                                         #36518f 50%, #3d5691 100%);
+       border: 1px solid #172d6e;
+       border-bottom: 1px solid #0e1d45;
+       border-radius: 5px;
+       -webkit-box-shadow: inset 0 1px 0 0 #b1b9cb;
+       box-shadow: inset 0 1px 0 0 #b1b9cb;
+       color: #fff;
+       font: bold 16px/1 "helvetica neue", helvetica, arial, sans-serif;
+       padding: 7px 0 8px 0;
+       text-decoration: none;
+       text-align: center;
+       text-shadow: 0 -1px 1px #000f4d;
+       width: 150px; }
+     button.mybutton:hover {
+       background-color: #7f8dad;
+       background-image: -webkit-gradient(linear, left top, left bottom,
+                                          color-stop(0%, #7f8dad),
+                                          color-stop(50%, #4a5e8c),
+                                          color-stop(50%, #2f477d),
+                                          color-stop(100%, #364c80));
+       background-image: -webkit-linear-gradient(top, #7f8dad 0%, #4a5e8c
+                                                 50%, #2f477d 50%,
+                                                 #364c80 100%);
+       background-image: -moz-linear-gradient(top, #7f8dad 0%, #4a5e8c
+                                              50%, #2f477d 50%, #364c80
+                                              100%);
+       background-image: -ms-linear-gradient(top, #7f8dad 0%, #4a5e8c
+                                             50%, #2f477d 50%, #364c80
+                                             100%);
+       background-image: -o-linear-gradient(top, #7f8dad 0%, #4a5e8c 50%,
+                                            #2f477d 50%, #364c80 100%);
+       background-image: linear-gradient(top, #7f8dad 0%, #4a5e8c 50%,
+                                         #2f477d 50%, #364c80 100%);
+       cursor: pointer; }
+     button.mybutton:active {
+       -webkit-box-shadow: inset 0 0 20px 0 #1d2845, 0 1px 0 white;
+       box-shadow: inset 0 0 20px 0 #1d2845, 0 1px 0 white; }
+    </style>
     <script src="jquery.min.js" type="text/javascript" jss="html/index"></script>
     <script src="react.js" type="text/javascript" jss="html/index"></script>
     <script src="JSXTransformer.js" type="text/javascript" jss="html/index"></script>
@@ -33,9 +93,9 @@
      var SyncButtons = React.createClass({
        render: function(){
          return(<div>
-                <button id='new' type='button' onClick={this.props.syncNew}>New</button>
-                <button id='full' type='button' onClick={this.props.syncFull}>Full</button>
-                <button id='del' type='button' onClick={this.props.syncDel}>Del</button>
+                <button id='new' type='button' className='mybutton' onClick={this.props.syncNew}>New</button>
+                <button id='full' type='button' className='mybutton' onClick={this.props.syncFull}>Full</button>
+                <button id='del' type='button' className='mybutton' onClick={this.props.syncDel}>Del</button>
                 </div>);
        }
      });
@@ -242,8 +302,8 @@
            fchanged = dirchanged(from,to,true,true);
          }
          return (<div>
-                 <button id='myRefresh' type='button' onClick={this.myRefresh}>Refresh</button>
-                 <button id='fakeRefresh' type='button' onClick={this.fakeRefresh}>FakeRefresh</button>
+                 <button id='myRefresh' type='button' className='mybutton' onClick={this.myRefresh}>Refresh</button>
+                 <button id='fakeRefresh' type='button' className='mybutton' onClick={this.fakeRefresh}>FakeRefresh</button>
                  <hr/>
                  <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
                  <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
