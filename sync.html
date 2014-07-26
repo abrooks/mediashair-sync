@@ -187,7 +187,6 @@
          return (<span><div>{this.props.dir}:</div>
                  <div>
                  <select id={this.props.dir}
-                 defaultValue={this.props.selected}
                  value={this.props.selected}
                  onChange={this.handleChange}
                  ref='selectedInput'>
@@ -278,7 +277,7 @@
          });
        },
        myRefresh: function(event, val) {
-         this.setState({pathinfo: {}, to: '', from: ''});
+         this.setState({pathinfo: {}});
          getPROPFIND(BASE_URL, this.refreshCB);
        },
        onSelectionChange: function(id, val) {
