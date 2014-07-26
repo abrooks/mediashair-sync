@@ -76,19 +76,6 @@
     <script type="text/jsx">
      /** @jsx React.DOM */
      var BASE_URL = 'http://10.10.10.254/data/';
-     var datas = {'Foo': {},
-                  'UsbDisk2/Volume1/images/': {},
-                  'Long/path/name/for/testing/purposes/here': {},
-                  'Foo/Bar': {'zerp': {size: 1, time: 1},
-                              'zoop': {size: 11, time: 3},
-                              'zip': {size: 2, time: 2},
-                              'zep': {size: 2, time: 2},
-                              'zop': {size: 100, time: 9}},
-                  'Foo/Baz': {'zerp': {size: 2, time: 1},
-                              'zoip': {size: 11, time: 3},
-                              'zip': {size: 2, time: 2},
-                              'zep': {size: 3, time: 2},
-                              'zap': {size: 100, time: 9}}};
 
      var SyncButtons = React.createClass({
        render: function(){
@@ -292,9 +279,6 @@
          this.setState({pathinfo: {}, to: '', from: ''});
          getPROPFIND(BASE_URL, this.refreshCB);
        },
-       fakeRefresh: function(event, val) {
-         this.setState({pathinfo: datas, to: '', from: ''});
-       },
        onSelectionChange: function(id, val) {
          var update = {}
          update[id.toLowerCase()] = val
@@ -313,7 +297,6 @@
          }
          return (<div>
                  <button id='myRefresh' type='button' className='mybutton' onClick={this.myRefresh}>Refresh</button>
-                 <button id='fakeRefresh' type='button' className='mybutton' onClick={this.fakeRefresh}>FakeRefresh</button>
                  <hr/>
                  <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
                  <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
