@@ -106,7 +106,8 @@
          var content = <div/>;
          if( this.props.files && this.props.files.length != 0 ) {
            this.props.files.forEach(function(f) {
-             items.push(<div key={f.name}>{f.name}, {f.size} bytes, {f.time}</div>);
+             var mbsize = (f.size/(1024*1024)).toFixed(2);
+             items.push(<div key={f.name}>{f.name}, {mbsize}MB, {f.time}</div>);
            });
            content = <span><h1>{this.props.fmode}</h1>{items}</span>;
          }
