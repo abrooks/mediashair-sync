@@ -240,7 +240,7 @@
                dataType: "xml",
                headers: {"Content-Type": "text/xml; charset=\"utf-8\"", Depth: 1}})
                .done(cb)
-               .fail(function(x){console.log('PROPFIND fail', x, path);});
+               .fail(function(){alert('PROPFIND fail', path, arguments);});
      };
 
      var doCOPY = function(src, dst, cb) {
@@ -251,7 +251,7 @@
                //onCensor: "xx",
                headers: {Destination: dst, Depth:1}})
             .done(cb)
-            .fail(function (){console.log('COPY fail', arguments);});
+            .fail(function (){alert('COPY fail', src, dst, arguments);});
      }
 
      var doDELETE = function(target, cb) {
@@ -260,7 +260,7 @@
                dataType: "text",
                headers: {}})
             .done(cb)
-            .fail(function (){console.log('DELETE fail', arguments);});
+            .fail(function (){alert('DELETE fail', target, arguments);});
      }
 
      var FullUI = React.createClass({
