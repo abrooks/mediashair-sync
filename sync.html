@@ -122,11 +122,9 @@
          cb(items);
          if( item ) {
            var rest = items.slice(1);
-           console.log("copying", item.name, rest, from, to);
            doCOPY(from + '/' + item.name,
                   to + '/' + item.name,
                   function() {
-               console.log("copy done", item.name, arguments);
                root_this.syncCopies(rest, from, to, cb);
              });
          }
@@ -137,10 +135,8 @@
          cb(targets);
          if( item ) {
            var rest = targets.slice(1);
-           console.log("deleting", item.name, rest, path);
            doDELETE(path + '/' + item.name,
-                  function() {
-               console.log("delete done", item.name, arguments);
+                    function() {
                root_this.syncDeletes(rest, path, cb);
              });
          }
@@ -302,7 +298,6 @@
        onSelectionChange: function(id, val) {
          var update = {}
          update[id.toLowerCase()] = val
-         console.log("onSelectionChange", update);
          this.setState(update);
        },
        render: function() {
