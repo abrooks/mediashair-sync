@@ -104,7 +104,7 @@
                         <td>{f.time}</td>
                         </tr>);
            });
-           content = <span><h1>{this.props.fmode}</h1><table>{items}</table></span>;
+           content = <span><h1>{this.props.fmode} ({this.props.files.length})</h1><table>{items}</table></span>;
          }
          return(content);
        }
