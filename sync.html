@@ -180,7 +180,7 @@
          var paths = [<option value='' disabled='disabled' key={this.props.dir}>
                       Select path...</option>];
          var root_this = this;
-         Object.keys(this.props.data).forEach(function(path){
+         Object.keys(this.props.data).sort().forEach(function(path){
            var count = Object.keys(root_this.props.data[path]).length;
            paths.push(<option value={path} key={path}>{path} ({count})</option>);
          });
