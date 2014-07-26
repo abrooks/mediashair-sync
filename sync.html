@@ -146,24 +146,30 @@
          }
        },
        syncDel: function(id){
-         this.syncDeletes(this.props.fdel,
-                          BASE_URL + this.props.to,
-                          function(){});
+         if ( confirm('Run DEL sync?') ) {
+           this.syncDeletes(this.props.fdel,
+                            BASE_URL + this.props.to,
+                            function(){});
+         }
        },
        syncNew: function(id){
-         this.syncCopies(this.props.fnew,
-                         BASE_URL + this.props.from,
-                         BASE_URL + this.props.to,
-                         function(){});
+         if ( confirm('Run NEW sync?') ) {
+           this.syncCopies(this.props.fnew,
+                           BASE_URL + this.props.from,
+                           BASE_URL + this.props.to,
+                           function(){});
+         }
        },
        syncFull: function(id){
-         this.syncDeletes(this.props.fdel,
-                          BASE_URL + this.props.to,
-                          function(){});
-         this.syncCopies(this.props.fnew,
-                         BASE_URL + this.props.from,
-                         BASE_URL + this.props.to,
-                         function(){});
+         if ( confirm('Run FULL sync?') ) {
+           this.syncDeletes(this.props.fdel,
+                            BASE_URL + this.props.to,
+                            function(){});
+           this.syncCopies(this.props.fnew,
+                           BASE_URL + this.props.from,
+                           BASE_URL + this.props.to,
+                           function(){});
+         }
        },
        render: function(){
          return(<div>
