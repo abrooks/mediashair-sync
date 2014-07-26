@@ -82,11 +82,16 @@
      var BASE_URL = 'http://10.10.10.254/data/';
 
      var SyncButtons = React.createClass({
+       handleSync: function(event, full_id) {
+         // this is crap, but we're goin' with it...
+         var id = full_id.replace(/.*\$/,'');
+         this.props.doSync(id);
+       },
        render: function(){
          return(<div>
-                <button id='new' type='button' className='mybutton' onClick={this.props.syncNew}>New</button>
-                <button id='full' type='button' className='mybutton' onClick={this.props.syncFull}>Full</button>
-                <button id='del' type='button' className='mybutton' onClick={this.props.syncDel}>Del</button>
+                <button id='new' key='new' type='button' className='mybutton' onClick={this.handleSync}>New</button>
+                <button id='full' key='full' type='button' className='mybutton' onClick={this.handleSync}>Full</button>
+                <button id='del' key='del' type='button' className='mybutton' onClick={this.handleSync}>Del</button>
                 </div>);
        }
      });
@@ -111,54 +116,25 @@
      });
 
      var SyncUI = React.createClass({
-       syncCopies: function(items, from, to) {
-         var item = items[0];
-         var root_this = this;
-         if( item ) {
-           var rest = items.slice(1);
-           doCOPY(from + '/' + item.name,
-                  to + '/' + item.name,
-                  function() {
-               root_this.syncCopies(rest, from, to);
-             });
-         }
-       },
-       syncDeletes: function(targets, path) {
-         var item = targets[0];
-         var root_this = this;
-         if( item ) {
-           var rest = targets.slice(1);
-           doDELETE(path + '/' + item.name,
-                    function() {
-               root_this.syncDeletes(rest, path);
-             });
-         }
-       },
-       syncDel: function(id){
-         if ( confirm('Run DEL sync?') ) {
-           this.syncDeletes(this.props.fdel,
-                            BASE_URL + this.props.to);
-         }
-       },
-       syncNew: function(id){
-         if ( confirm('Run NEW sync?') ) {
-           this.syncCopies(this.props.fnew,
-                           BASE_URL + this.props.from,
-                           BASE_URL + this.props.to);
-         }
-       },
-       syncFull: function(id){
-         if ( confirm('Run FULL sync?') ) {
-           this.syncDeletes(this.props.fdel,
-                            BASE_URL + this.props.to);
-           this.syncCopies(this.props.fnew,
-                           BASE_URL + this.props.from,
-                           BASE_URL + this.props.to);
+       doSync: function(id) {
+         if ( confirm('Run ' + id.toUpperCase() + ' sync?') ) {
+           var update = {};
+           if( id == 'new' || id == 'full' ) {
+             update['new'] = {items: this.props.fnew.concat(this.props.fchanged),
+                              from: this.props.from,
+                              to: this.props.to};
+           }
+           if ( id == 'del' || id == 'full' ) {
+             update['del'] = {items: this.props.fdel,
+                              to: this.props.to};
+           }
+           console.log('doSync', update);
+           this.props.root_setState(update);
          }
        },
        render: function(){
          return(<div>
-                <SyncButtons syncNew={this.syncNew} syncFull={this.syncFull} syncDel={this.syncDel}/>
+                <SyncButtons doSync={this.doSync}/>
                 <br/>
                 <span>
                 <SyncFiles fmode='del' files={this.props.fdel}/>
@@ -249,7 +225,7 @@
 
      var FullUI = React.createClass({
        getInitialState: function() {
-         return {pathinfo: {}, from:'', to:'', todo: [], inprogress: []};
+         return {pathinfo: {}, from:'', to:'', new: '', del: '', in_progress: ''};
        },
        refreshCB: function(data, val) {
          var root_this = this;
@@ -277,7 +253,7 @@
          });
        },
        myRefresh: function(event, val) {
-         this.setState({pathinfo: {}});
+         this.setState({pathinfo: {}, to: '', from: ''});
          getPROPFIND(BASE_URL, this.refreshCB);
        },
        onSelectionChange: function(id, val) {
@@ -285,16 +261,60 @@
          update[id.toLowerCase()] = val
          this.setState(update);
        },
+       root_setState: function(s, f) {
+         this.setState(s, f);
+       },
+       componentDidUpdate: function() {
+         var mySetState = this.root_setState;
+         if ( ! this.state.in_progress ) {
+           if ( this.state.del ) {
+             var item = this.state.del.items[0];
+             if( item ) {
+               var rest = this.state.del.items.slice(1);
+               var from = this.state.del.from, to = this.state.del.to;
+               item.mode = 'Deleting';
+               this.setState({in_progress: item,
+                              del: {items: rest,
+                                    to: this.state.del.to}});
+               doDELETE(BASE_URL + to + '/' + item.name,
+                        function() {mySetState({in_progress: ''}); });
+             } else {
+               this.setState({in_progress: '', del: ''});
+             }
+           } else if ( this.state.new ) {
+             var item = this.state.new.items[0];
+             if( item ) {
+               var rest = this.state.new.items.slice(1);
+               var from = this.state.new.from, to = this.state.new.to;
+               item.mode = 'Copying';
+               this.setState({in_progress: item,
+                              new: {items: rest,
+                                    from: from,
+                                    to: to}});
+               doCOPY(BASE_URL + from + '/' + item.name,
+                      BASE_URL + to + '/' + item.name,
+                      function() { mySetState({in_progress: ''}); });
+             } else {
+               this.setState({in_progress: '', new: ''});
+             }
+           }
+         }
+       },
        render: function() {
          var from = this.state.from ? this.state.pathinfo[this.state.from] : {};
          var to = this.state.to ? this.state.pathinfo[this.state.to] : {};
          var fnew = [];
          var fchanged = [];
          var fdel = [];
+         var in_progress = <div/>;
          if ( this.state.from && this.state.to ) {
            fnew = dirdiff(from, to);
            fdel = dirdiff(to, from);
            fchanged = dirchanged(from,to,true,true);
+         }
+         if ( this.state.in_progress ) {
+           console.log('in_progress', this.state);
+           in_progress = <div> {this.state.in_progress.mode}: {this.state.in_progress.name}</div>;
          }
          return (<div>
                  <button id='myRefresh' type='button' className='mybutton' onClick={this.myRefresh}>Refresh</button>
@@ -302,7 +322,10 @@
                  <PathDropdown dir='From' data={this.state.pathinfo} selected={this.state.from} onSelectionChange={this.onSelectionChange}/>
                  <PathDropdown dir='To' data={this.state.pathinfo} selected={this.state.to} onSelectionChange={this.onSelectionChange}/>
                  <hr/>
-                 <SyncUI from={this.state.from} to={this.state.to} fnew={fnew} fdel={fdel} fchanged={fchanged}/>
+                 {in_progress}
+                 <SyncUI from={this.state.from} to={this.state.to}
+                         fnew={fnew} fdel={fdel} fchanged={fchanged}
+                         root_setState={this.root_setState}/>
                  </div>);
        }
      });
