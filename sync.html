@@ -273,6 +273,7 @@
                var rest = this.state.del.items.slice(1);
                var from = this.state.del.from, to = this.state.del.to;
                item.mode = 'Deleting';
+               item.count = rest.length;
                this.setState({in_progress: item,
                               del: {items: rest,
                                     to: this.state.del.to}});
@@ -287,6 +288,7 @@
                var rest = this.state.new.items.slice(1);
                var from = this.state.new.from, to = this.state.new.to;
                item.mode = 'Copying';
+               item.count = rest.length;
                this.setState({in_progress: item,
                               new: {items: rest,
                                     from: from,
@@ -314,7 +316,9 @@
          }
          if ( this.state.in_progress ) {
            console.log('in_progress', this.state);
-           in_progress = <div> {this.state.in_progress.mode}: {this.state.in_progress.name}</div>;
+           in_progress = <div> {this.state.in_progress.mode}:
+                         {this.state.in_progress.name} ({this.state.in_progress.count})
+           </div>;
          }
          return (<div>
                  <button id='myRefresh' type='button' className='mybutton' onClick={this.myRefresh}>Refresh</button>
